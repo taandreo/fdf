@@ -1,5 +1,7 @@
 lib/
 libft/
+minilibx_macos/
 fdf
 .*
 !.gitignore
+*.o

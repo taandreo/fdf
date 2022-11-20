@@ -8,6 +8,7 @@ int main(void)
 
 	win_ptr = mlx_new_window(mlx_ptr, 1000, 1000, "Hello World");
 	printf("%p\n", win_ptr);
+	sleep(10000);
 	ft_strdup("pato");
 	return (0);
 }
