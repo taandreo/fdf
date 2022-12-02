@@ -5,9 +5,9 @@ INCLUDES = libmlx_mac
 NAME = fdf
 LIBFT = ./lib/libft.a
 LIBFT_DIR = ./libft
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -arch x86_64 
 
-SOURCES = fdf.c
+SOURCES = main.c utils.c
 
 OBJS = $(SOURCES:.c=.o)
 
@@ -43,3 +43,8 @@ libmlx_mac:
 libmlx_linux:
 	wget https://projects.intra.42.fr/uploads/document/document/9393/minilibx-linux.tgz
 	tar -xf minilibx-linux.tgz && rm -f minilibx-linux.tgz
+
+maps:
+	wget https://projects.intra.42.fr/uploads/document/document/9390/maps.zip
+	unzip maps.zip
+	rm -f maps.zip

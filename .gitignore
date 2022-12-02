@@ -1,7 +1,10 @@
 lib/
 libft/
 minilibx_macos/
+ignore/
 fdf
 .*
 !.gitignore
 *.o
+fdf_intra
+test_maps/
