@@ -6,5 +6,7 @@ fdf
 .*
 !.gitignore
 *.o
+*.out
 fdf_intra
 test_maps/
+fdf_vb

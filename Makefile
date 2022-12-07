@@ -6,18 +6,19 @@ NAME = fdf
 LIBFT = ./lib/libft.a
 LIBFT_DIR = ./libft
 CFLAGS = -Wall -Wextra -Werror -arch x86_64 
+LIBS = -lmlx -lft -framework OpenGL -framework AppKit
 
-SOURCES = main.c utils.c
+SOURCES = main.c utils.c bresenham.c
 
 OBJS = $(SOURCES:.c=.o)
 
 all: $(NAME)
 
-%.o: %.c
+%.o: %.c fdf.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(NAME): $(OBJS) $(LIBFT)
-	clang $(CFLAGS) -o $@ -lmlx -lft -framework OpenGL -framework AppKit -L lib $(OBJS)
+	clang $(CFLAGS) -o $@ $(LIBS) -L lib $(OBJS)
 
 $(LIBFT):
 	make bonus -C $(LIBFT_DIR)

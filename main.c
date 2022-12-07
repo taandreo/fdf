@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/12/07 19:45:41 by tairribe          #+#    #+#             */
+/*   Updated: 2022/12/07 20:40:33 by tairribe         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "fdf.h"
 
 int	open_file(char *filename)
@@ -71,9 +83,13 @@ void	init_fdf(t_fdf *fdf)
 {
 	fdf->x = 0;
 	fdf->y = 0;
+	fdf->x0 = 0;
+	fdf->y0 = 0;
 	fdf->mlx_ptr = NULL;
 	fdf->win_ptr = NULL;
+	fdf->img_ptr = NULL;
 	fdf->coord = NULL;
+	fdf->angle = 0.8;
 }
 
 int	get_mt_size(void **mt)
@@ -131,6 +147,7 @@ void	get_coordinates(t_fdf *fdf, char *filename)
 	char	*raw_line;
 	int		i;
 
+	init_fdf(fdf);
 	get_xy(fdf, filename);
 	fd = open_file(filename);
 	fdf->coord = ft_calloc(fdf->y, sizeof(int*) + 1);
@@ -141,9 +158,93 @@ void	get_coordinates(t_fdf *fdf, char *filename)
 		raw_line = get_next_line(fd);
 		fdf->coord[i++] = get_line(raw_line, fdf->x);
 	}
-	print_coordinates(fdf);
+	// print_coordinates(fdf);
 	close(fd);
 }
+
+void	free_fdf(t_fdf *fdf)
+{
+	free_mt((void **) fdf->coord);
+}
+
+int	start_fdf(t_fdf *fdf, char *filename)
+{
+	if ((fdf->mlx_ptr = mlx_init()) == NULL)
+	{
+		free_fdf(fdf);
+		print_error("Starting mlx.");
+	}
+	fdf->win_ptr = mlx_new_window(fdf->mlx_ptr, WIDTH, HEIGHT, filename);
+	// fdf->img_ptr = mlx_new_image(fdf->mlx_ptr, WIDTH, HEIGHT);
+	return(0);
+}
+
+void	init_point(t_point *po, int x, int y, int z)
+{
+	po->x = x;
+	po->y = y;
+	po->z = z;
+}
+
+
+zoom(t_point *src, t_point *dst)
+{
+	src->x *= LINESIZE;
+	src->y *= LINESIZE;
+	dst->x *= LINESIZE;
+	dst->y *= LINESIZE;
+}
+
+
+void	draw(t_fdf *fdf)
+{
+	t_point line;
+	t_point column;
+	t_point src;
+	int 	i;
+	int		j;
+	
+	init_point(&src,    0, 0, 0);
+	init_point(&line,   0, 0, 0);
+	init_point(&column, 0, 0, 0);
+	i = 0;
+	while(i < fdf->y - 1)
+	{
+		j = 0;
+		src.z = fdf->coord[i][j] * LINESIZE;
+		src.x = fdf->x0;
+		src.y = fdf->y0;
+		printf("(x0: %i, y0: %i)\n", fdf->x0, fdf->y0);
+		// make3d(&line, fdf->angle, 1);
+		// edu_equation(&line);
+		while (j < fdf->x)
+		{
+			zoom(src, line, x0, y0);
+			line.x = src.x + (j + 1) * LINESIZE;
+			line.y = src.y + i * LINESIZE;
+			// line.y = i;
+			line.z = fdf->coord[i][j] * LINESIZE;
+			// make3d(&line, fdf->angle, 1);
+			// edu_equation(&line);
+			bresenham(fdf, src.x, src.y, line.x, line.y);
+			column.x = src.x + j * LINESIZE;
+			column.y = src.y + (i + 1) * LINESIZE;
+			column.z = fdf->coord[i + 1][j] * LINESIZE;
+			// make3d(&line, fdf->angle, 1);
+			// edu_equation(&column);
+			bresenham(fdf, src.x, src.y, column.x, column.y);
+			src.x = line.x;
+			src.y = line.y;
+			src.z = line.z;
+			j++;
+		}
+		src.y += LINESIZE;
+		src.x = 0;
+		i++;
+	}
+}
+
+
 
 int	main(int argc, char *argv[])
 {
@@ -154,11 +255,11 @@ int	main(int argc, char *argv[])
 		usage();
 	
 	filename = argv[1];
-	init_fdf(&fdf);
 	get_coordinates(&fdf, filename);
-	// fdf.mlx_ptr = mlx_init(); 
-	// fdf.win_ptr = mlx_new_window(fdf.mlx_ptr, 1000, 1000, filename);
-
+	centrallize(&fdf);
+	start_fdf(&fdf, filename);
+	draw(&fdf);
+	mlx_loop(fdf.mlx_ptr);
 	// if (fdf.mlx_ptr == NULL)
 	// 	print_error("setting up the connection to the graphical system");
 	
