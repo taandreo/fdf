@@ -6,26 +6,12 @@
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/07 19:45:41 by tairribe          #+#    #+#             */
-/*   Updated: 2022/12/07 20:40:33 by tairribe         ###   ########.fr       */
+/*   Updated: 2022/12/10 21:17:18 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
-int	open_file(char *filename)
-{
-	int fd;
-
-	fd = open(filename, O_RDONLY);
-	if (fd < 0)
-	{
-		perror(filename);
-		exit (1);
-	}
-	return (fd);
-}
-
-// Write a line in the x
 void	put_line_simple(t_fdf fdf, int x, int y, int size)
 {
 	int i;
@@ -36,130 +22,6 @@ void	put_line_simple(t_fdf fdf, int x, int y, int size)
 		x++;
 		i++;
 	}
-}
-
-int	free_mt(void **mt)
-{
-	int	i;
-
-	i = 0;
-	while(mt[i])
-		free(mt[i++]);
-	free(mt);
-	return i;
-}
-
-char	**get_mt(char *s)
-{
-	char *l;
-	char **mt;
-
-	l = ft_strtrim(s, "\n\r ");
-	mt = ft_split(l, ' ');
-	free(s);
-	free(l);
-	return(mt);
-}
-
-void	get_xy(t_fdf *fdf, char *filename)
-{
-	char	*line;	
-	int		fd;
-
-	fd = open_file(filename);
-	line = get_next_line(fd);
-	if (!line)
-		print_error("Empty file.");
-	fdf->x = free_mt((void **) get_mt(line));
-	while (line)
-	{
-		fdf->y++;
-		line = get_next_line(fd);
-	}
-	close(fd);
-}
-
-void	init_fdf(t_fdf *fdf)
-{
-	fdf->x = 0;
-	fdf->y = 0;
-	fdf->x0 = 0;
-	fdf->y0 = 0;
-	fdf->mlx_ptr = NULL;
-	fdf->win_ptr = NULL;
-	fdf->img_ptr = NULL;
-	fdf->coord = NULL;
-	fdf->angle = 0.8;
-}
-
-int	get_mt_size(void **mt)
-{
-	int	i;
-
-	i = 0;
-	while(mt[i])
-		i++;
-	return (i);
-}
-
-int	*get_line(char *raw_line, int size)
-{
-	char	**mt;
-	int 	*p;
-	int 	i;
-
-	i = 0;
-	p = ft_calloc(size, sizeof(int));
-	mt = get_mt(raw_line);
-	if (get_mt_size((void**) mt) != size)
-	{
-		free_mt((void **) mt);
-		print_error("Found wrong line length.");
-	}
-	while (mt[i])
-	{
-		p[i] = ft_atoi(mt[i]);
-		i++;
-	}
-	free_mt((void **) mt);
-	return (p);
-}
-
-void	print_coordinates(t_fdf *fdf)
-{
-	int	i;
-	int j;
-
-	j = 0;
-	while (fdf->coord[j])
-	{
-		i = 0;
-		while(i < fdf->x)
-			ft_printf("[%i] ", fdf->coord[j][i++]);
-		ft_printf("\n");
-		j++;
-	}	
-}
-
-void	get_coordinates(t_fdf *fdf, char *filename)
-{
-	int		fd;
-	char	*raw_line;
-	int		i;
-
-	init_fdf(fdf);
-	get_xy(fdf, filename);
-	fd = open_file(filename);
-	fdf->coord = ft_calloc(fdf->y, sizeof(int*) + 1);
-	fdf->coord[fdf->y] = NULL;
-	i = 0;
-	while (i < fdf->y)
-	{
-		raw_line = get_next_line(fd);
-		fdf->coord[i++] = get_line(raw_line, fdf->x);
-	}
-	// print_coordinates(fdf);
-	close(fd);
 }
 
 void	free_fdf(t_fdf *fdf)
@@ -187,55 +49,61 @@ void	init_point(t_point *po, int x, int y, int z)
 }
 
 
-zoom(t_point *src, t_point *dst)
+void	zoom(t_point *src, t_point *dst, int x0, int y0)
 {
 	src->x *= LINESIZE;
+	src->x += x0;
 	src->y *= LINESIZE;
+	src->y += y0;
 	dst->x *= LINESIZE;
+	dst->x += x0;
 	dst->y *= LINESIZE;
+	dst->y += y0;
 }
 
 
 void	draw(t_fdf *fdf)
 {
-	t_point line;
-	t_point column;
+	t_point dst;
 	t_point src;
 	int 	i;
 	int		j;
 	
-	init_point(&src,    0, 0, 0);
-	init_point(&line,   0, 0, 0);
-	init_point(&column, 0, 0, 0);
+	init_point(&src, 0, 0, 0);
+	init_point(&dst, 0, 0, 0);
 	i = 0;
 	while(i < fdf->y - 1)
 	{
 		j = 0;
-		src.z = fdf->coord[i][j] * LINESIZE;
-		src.x = fdf->x0;
-		src.y = fdf->y0;
-		printf("(x0: %i, y0: %i)\n", fdf->x0, fdf->y0);
-		// make3d(&line, fdf->angle, 1);
-		// edu_equation(&line);
 		while (j < fdf->x)
-		{
-			zoom(src, line, x0, y0);
-			line.x = src.x + (j + 1) * LINESIZE;
-			line.y = src.y + i * LINESIZE;
-			// line.y = i;
-			line.z = fdf->coord[i][j] * LINESIZE;
-			// make3d(&line, fdf->angle, 1);
-			// edu_equation(&line);
-			bresenham(fdf, src.x, src.y, line.x, line.y);
-			column.x = src.x + j * LINESIZE;
-			column.y = src.y + (i + 1) * LINESIZE;
-			column.z = fdf->coord[i + 1][j] * LINESIZE;
-			// make3d(&line, fdf->angle, 1);
+		{	
+			// LINE
+			// SRC
+			src.x = j;
+			src.y = i;
+			src.z = fdf->coord[i][j];
+			// DST
+			dst.x = j + 1;
+			dst.y = i;
+			dst.z = fdf->coord[i][j + 1];
+			zoom(&src, &dst, fdf->x0, fdf->y0);
+			make3d(&src, &dst, fdf->angle, 20);
+			// edu_equation_02(&src, &dst);
+			bresenham(fdf, &src, &dst);
+			// COLUNM
+			// SRC
+			src.x = j;
+			src.y = i;
+			src.z = fdf->coord[i][j];
+			// DST
+			dst.x = j;
+			dst.y = i + 1;
+			dst.z = fdf->coord[i + 1][j];
+			zoom(&src, &dst, fdf->x0, fdf->y0);
+			make3d(&src, &dst, fdf->angle, 20);
+			// edu_equation_02(&src, &dst);
 			// edu_equation(&column);
-			bresenham(fdf, src.x, src.y, column.x, column.y);
-			src.x = line.x;
-			src.y = line.y;
-			src.z = line.z;
+			bresenham(fdf, &src, &dst);
 			j++;
 		}
 		src.y += LINESIZE;
