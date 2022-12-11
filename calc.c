@@ -1,70 +1,9 @@
 #include "fdf.h"
 
-static void	pixel(t_fdf *fdf, int x, int y, int color)
+void	pixel(t_fdf *fdf, int x, int y, int color)
 {
 	if (x > 0 && x < WIDTH && y > 0 && y < HEIGHT)
 		mlx_pixel_put(fdf->mlx_ptr, fdf->win_ptr, x, y, color);
-}
-
-void	init_bresenham(t_bresenham *bre, t_point *src, t_point *dst)
-{
-	bre->dx =  abs(dst->x - src->x);
-   	bre->dy = -abs(dst->y - src->y);
-   	bre->err = bre->dx + bre->dy; /* error value e_xy */
-	bre->e2 = 0;
-	bre->x = src->x;
-	bre->y = src->y;
-
-	if (src->x < dst->x)
-		bre->ix = 1;
-	else
-		bre->ix = -1;
-	
-	if (src->y < dst->y)
-		bre->iy = 1;
-	else
-		bre->iy = -1;
-}
-
-void plotLine(t_fdf *fdf, int x0, int y0, int x1, int y1)
-{
-   int dx =  abs(x1 - x0), sx = x0<x1 ? 1 : -1;
-   int dy = -abs(y1 - y0), sy = y0<y1 ? 1 : -1; 
-   int err = dx+dy, e2;
- 
-   for(;;){
-      pixel(fdf, x0, y0, WHITE);
-      if (x0==x1 && y0==y1) break;
-      e2 = 2*err;
-      if (e2 >= dy) { err += dy; x0 += sx; } 
-      if (e2 <= dx) { err += dx; y0 += sy; }
-   }
-}
-
-void	bresenham(t_fdf *fdf, t_point *src, t_point *dst)
-{
-// 	t_bresenham bre;
-
-// 	init_bresenham(&bre, src, dst);
-   	
-// 	while(1){
-// 		pixel(fdf, bre.x, bre.y, WHITE);
-// 		if (bre.x == dst->x && bre.y == dst->y)
-// 			break;
-//       	bre.e2 = 2 * bre.err;
-// 		if (bre.e2 >= bre.dy)
-// 		{ 
-// 			bre.err += bre.dy; 
-// 			bre.x += bre.ix; 
-// 		}
-// 		if (bre.e2 <= bre.dx) 
-// 		{
-// 			bre.err += bre.dx;
-// 			bre.y += bre.ix; 
-// 		}
-// 		ft_printf("ok");
-//    }
-	plotLine(fdf, src->x, src->y, dst->x, dst->y);
 }
 
 void	centrallize(t_fdf *fdf)
@@ -112,11 +51,6 @@ void	edu_equation(t_point *src, t_point *dst)
 
 	dst->x = (int) x;
 	dst->y = (int) y;
-
-}
-
-void	( t_)
-{
 
 }
 

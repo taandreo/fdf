@@ -29,10 +29,11 @@ typedef struct	s_bresenham
 	int dy;
 	int ix;
 	int iy;
-	int e2;
-	int err;
-	int x;
-	int y;
+	int	x0;
+	int y0;
+	int x1;
+	int y1;
+	int d;
 } 				t_bresenham;
 
 typedef struct	s_fdf
@@ -42,7 +43,6 @@ typedef struct	s_fdf
 	int			x0;
 	int			y0;
 	int			**coord;
-	t_point		**points;
 	void		*mlx_ptr;
 	void		*win_ptr;
 	void		*img_ptr;
@@ -53,10 +53,12 @@ void	get_coordinates(t_fdf *fdf, char *filename);
 void	centrallize(t_fdf *fdf);
 void	print_error(char *s);
 void	usage();
-void	bresenham(t_fdf *fdf, t_point *src, t_point *dst);
+void	bresenham(t_fdf *fdf, int x0, int y0, int x1, int y1);
 void	make3d(t_point *src, t_point *dst, double angle, double z);
 void	edu_equation(t_point *src, t_point *dst);
 int		free_mt(void **mt);
 void	edu_equation_02(t_point *src, t_point *dst);
+int		ft_abs(int value);
+void	pixel(t_fdf *fdf, int x, int y, int color);
 
 #endif

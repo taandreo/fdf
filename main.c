@@ -6,7 +6,7 @@
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/07 19:45:41 by tairribe          #+#    #+#             */
-/*   Updated: 2022/12/10 21:17:18 by tairribe         ###   ########.fr       */
+/*   Updated: 2022/12/11 18:05:11 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ void	draw(t_fdf *fdf)
 			zoom(&src, &dst, fdf->x0, fdf->y0);
 			make3d(&src, &dst, fdf->angle, 20);
 			// edu_equation_02(&src, &dst);
-			bresenham(fdf, &src, &dst);
+			bresenham(fdf, src.x, src.y, dst.x, dst.y);
 			// COLUNM
 			// SRC
 			src.x = j;
@@ -103,15 +103,14 @@ void	draw(t_fdf *fdf)
 			make3d(&src, &dst, fdf->angle, 20);
 			// edu_equation_02(&src, &dst);
 			// edu_equation(&column);
-			bresenham(fdf, &src, &dst);
+			bresenham(fdf, src.x, src.y, dst.x, dst.y);
 			j++;
 		}
-		src.y += LINESIZE;
+		// src.y += LINESIZE;
 		src.x = 0;
 		i++;
 	}
 }
-
 
 
 int	main(int argc, char *argv[])

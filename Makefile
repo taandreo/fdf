@@ -8,7 +8,7 @@ LIBFT_DIR = ./libft
 CFLAGS = -Wall -Wextra -Werror -arch x86_64 
 LIBS = -lmlx -lft -framework OpenGL -framework AppKit
 
-SOURCES = main.c utils.c calc.c file.c
+SOURCES = main.c utils.c calc.c file.c bresenham.c
 
 OBJS = $(SOURCES:.c=.o)
 

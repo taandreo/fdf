@@ -12,3 +12,11 @@ void	print_error(char *s)
 	ft_putendl_fd(s, 2);
 	exit(1);
 }
+
+int	ft_abs(int value)
+{
+	if (value < 0)
+		return (-value);
+	else
+		return (value);
+}
