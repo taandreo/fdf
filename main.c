@@ -6,7 +6,7 @@
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/07 19:45:41 by tairribe          #+#    #+#             */
-/*   Updated: 2022/12/11 18:05:11 by tairribe         ###   ########.fr       */
+/*   Updated: 2022/12/14 21:08:13 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,80 +38,54 @@ int	start_fdf(t_fdf *fdf, char *filename)
 	}
 	fdf->win_ptr = mlx_new_window(fdf->mlx_ptr, WIDTH, HEIGHT, filename);
 	// fdf->img_ptr = mlx_new_image(fdf->mlx_ptr, WIDTH, HEIGHT);
+	start_point(fdf);
 	return(0);
 }
 
-void	init_point(t_point *po, int x, int y, int z)
+t_point	init_point(int x, int y, int z)
 {
-	po->x = x;
-	po->y = y;
-	po->z = z;
+	t_point po;
+	
+	po.x = x;
+	po.y = y;
+	po.z = z;
+
+	return (po);
 }
 
-
-void	zoom(t_point *src, t_point *dst, int x0, int y0)
+void	new_line(t_fdf *fdf, t_point *src, t_point *dst)
 {
-	src->x *= LINESIZE;
-	src->x += x0;
-	src->y *= LINESIZE;
-	src->y += y0;
-	dst->x *= LINESIZE;
-	dst->x += x0;
-	dst->y *= LINESIZE;
-	dst->y += y0;
+	zoom(src, dst);
+	centralize_before(fdf, src, dst);
+	make3d(src, dst, fdf->angle, 20);
+	centralize_after(src, dst);
+	bresenham(fdf, src->x, src->y, dst->x, dst->y);
 }
-
 
 void	draw(t_fdf *fdf)
 {
 	t_point dst;
 	t_point src;
-	int 	i;
-	int		j;
+	int 	x;
+	int		y;
 	
-	init_point(&src, 0, 0, 0);
-	init_point(&dst, 0, 0, 0);
-	i = 0;
-	while(i < fdf->y - 1)
+	y = 0;
+	while(y < fdf->y - 1)
 	{
-		j = 0;
-		while (j < fdf->x)
+		x = 0;
+		while (x < fdf->x)
 		{	
-			// LINE
-			// SRC
-			src.x = j;
-			src.y = i;
-			src.z = fdf->coord[i][j];
-			// DST
-			dst.x = j + 1;
-			dst.y = i;
-			dst.z = fdf->coord[i][j + 1];
-			zoom(&src, &dst, fdf->x0, fdf->y0);
-			make3d(&src, &dst, fdf->angle, 20);
-			// edu_equation_02(&src, &dst);
-			bresenham(fdf, src.x, src.y, dst.x, dst.y);
-			// COLUNM
-			// SRC
-			src.x = j;
-			src.y = i;
-			src.z = fdf->coord[i][j];
-			// DST
-			dst.x = j;
-			dst.y = i + 1;
-			dst.z = fdf->coord[i + 1][j];
-			zoom(&src, &dst, fdf->x0, fdf->y0);
-			make3d(&src, &dst, fdf->angle, 20);
-			// edu_equation_02(&src, &dst);
-			// edu_equation(&column);
-			bresenham(fdf, src.x, src.y, dst.x, dst.y);
-			j++;
+			src = init_point(x, y, fdf->coord[y][x]);
+			dst = init_point(x + 1, y, fdf->coord[y][x + 1]);
+			new_line(fdf, &src, &dst);
+			src = init_point(x, y, fdf->coord[y][x]);
+			dst = init_point(x, y + 1, fdf->coord[y + 1][x]);
+			new_line(fdf, &src, &dst);
+			x++;
 		}
-		// src.y += LINESIZE;
-		src.x = 0;
-		i++;
+		y++;
 	}
 }
-
 
 int	main(int argc, char *argv[])
 {
@@ -123,7 +97,7 @@ int	main(int argc, char *argv[])
 	
 	filename = argv[1];
 	get_coordinates(&fdf, filename);
-	centrallize(&fdf);
+	// centralize(&fdf);
 	start_fdf(&fdf, filename);
 	draw(&fdf);
 	mlx_loop(fdf.mlx_ptr);

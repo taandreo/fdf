@@ -50,15 +50,25 @@ typedef struct	s_fdf
 }				t_fdf;
 
 void	get_coordinates(t_fdf *fdf, char *filename);
-void	centrallize(t_fdf *fdf);
+void	centralize(t_fdf *fdf);
 void	print_error(char *s);
 void	usage();
 void	bresenham(t_fdf *fdf, int x0, int y0, int x1, int y1);
 void	make3d(t_point *src, t_point *dst, double angle, double z);
-void	edu_equation(t_point *src, t_point *dst);
+
 int		free_mt(void **mt);
-void	edu_equation_02(t_point *src, t_point *dst);
+
 int		ft_abs(int value);
 void	pixel(t_fdf *fdf, int x, int y, int color);
+void	zoom(t_point *src, t_point *dst);
+void	start_point(t_fdf *fdf);
+
+void    edu_equation_03(t_point *p);
+void	edu_equation_02(t_point *src, t_point *dst);
+void	edu_equation(t_point *src, t_point *dst);
+void    edu_equation_04(t_point *p);
+void	centralize2(t_fdf *fdf, t_point *src, t_point *dst);
+void	centralize_before(t_fdf *fdf, t_point *src, t_point *dst);
+void	centralize_after(t_point *src, t_point *dst);
 
 #endif
