@@ -77,6 +77,18 @@ void	get_xy(t_fdf *fdf, char *filename)
 	close(fd);
 }
 
+int	get_crd(char *s)
+{
+	char  *color;
+	t_crd c;
+
+	color = ft_strchr(s, ',');
+	if (color)
+	{
+		color++;
+	}
+}
+
 int	*get_line(char *raw_line, int size)
 {
 	char	**mt;
@@ -93,6 +105,7 @@ int	*get_line(char *raw_line, int size)
 	}
 	while (mt[i])
 	{
+		get_color()
 		p[i] = ft_atoi(mt[i]);
 		i++;
 	}

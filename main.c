@@ -6,7 +6,7 @@
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/07 19:45:41 by tairribe          #+#    #+#             */
-/*   Updated: 2022/12/14 21:08:13 by tairribe         ###   ########.fr       */
+/*   Updated: 2022/12/14 22:49:19 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,10 +55,16 @@ t_point	init_point(int x, int y, int z)
 
 void	new_line(t_fdf *fdf, t_point *src, t_point *dst)
 {
-	zoom(src, dst);
-	centralize_before(fdf, src, dst);
-	make3d(src, dst, fdf->angle, 20);
-	centralize_after(src, dst);
+	zoom(src);
+	centralize_before(fdf, src);
+	make3d(src, fdf->angle, 20);
+	centralize_after(src);
+
+	zoom(dst);
+	centralize_before(fdf, dst);
+	make3d(dst, fdf->angle, 20);
+	centralize_after(dst);
+
 	bresenham(fdf, src->x, src->y, dst->x, dst->y);
 }
 
@@ -70,17 +76,22 @@ void	draw(t_fdf *fdf)
 	int		y;
 	
 	y = 0;
-	while(y < fdf->y - 1)
+	while(y < fdf->y)
 	{
 		x = 0;
 		while (x < fdf->x)
 		{	
-			src = init_point(x, y, fdf->coord[y][x]);
-			dst = init_point(x + 1, y, fdf->coord[y][x + 1]);
-			new_line(fdf, &src, &dst);
-			src = init_point(x, y, fdf->coord[y][x]);
-			dst = init_point(x, y + 1, fdf->coord[y + 1][x]);
-			new_line(fdf, &src, &dst);
+			if (x != fdf->x -1)
+			{
+				src = init_point(x, y, fdf->coord[y][x]);
+				dst = init_point(x + 1, y, fdf->coord[y][x + 1]);
+				new_line(fdf, &src, &dst);
+			}
+			if (y != fdf->y - 1){
+				src = init_point(x, y, fdf->coord[y][x]);
+				dst = init_point(x, y + 1, fdf->coord[y + 1][x]);
+				new_line(fdf, &src, &dst);
+			}
 			x++;
 		}
 		y++;

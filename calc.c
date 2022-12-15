@@ -28,127 +28,123 @@ void	centralize2(t_fdf *fdf, t_point *src, t_point *dst)
 	dst->y = dst->y + fdf->y0;
 }
 
-void	centralize_before(t_fdf *fdf, t_point *src, t_point *dst)
+void	centralize_before(t_fdf *fdf, t_point *po)
 {
-	src->x -= (fdf->x * LINESIZE) / 2;
-	src->y -= (fdf->y * LINESIZE) / 2;
-
-	dst->x -= (fdf->x * LINESIZE) / 2;
-	dst->y -= (fdf->y * LINESIZE) / 2;
+	po->x -= (fdf->x * LINESIZE) / 2;
+	po->y -= (fdf->y * LINESIZE) / 2;
 }
 
-void	centralize_after(t_point *src, t_point *dst)
+void	centralize_after(t_point *po)
 {
-	src->x += WIDTH  / 2;
-	src->y += HEIGHT / 2;
-
-	dst->x += WIDTH  / 2;
-	dst->y += HEIGHT / 2;
+	po->x += WIDTH  / 2;
+	po->y += HEIGHT / 2;
 }
 
-void	zoom(t_point *src, t_point *dst)
+void	zoom(t_point *po)
 {
-	src->x *= LINESIZE;
-	// src->x += x0;
-	src->y *= LINESIZE;
-	// src->y += y0;
-	dst->x *= LINESIZE;
-	// dst->x += x0;
-	dst->y *= LINESIZE;
-	// dst->y += y0;
+	po->x *= LINESIZE;
+	po->y *= LINESIZE;
 }
 
-void	make3d(t_point *src, t_point *dst, double angle, double z)
+void	make3d(t_point *po, double angle, double z)
 {
 	float	x;
 	float	y;
 
-	x = (src->x - src->y) * cos(angle);
-	y = (src->x + src->y) * sin(angle) - (src->z * z);
-	src->x = (int) x;
-	src->y = (int) y;
-	x = (dst->x - dst->y) * cos(angle);
-	y = (dst->x + dst->y) * sin(angle) - (dst->z * z);
-	dst->x = (int) x;
-	dst->y = (int) y;
+	x = (po->x - po->y) * cos(angle);
+	y = (po->x + po->y) * sin(angle) - (po->z * z);
+	po->x = (int) x;
+	po->y = (int) y;
 }
 
-void	edu_equation(t_point *src, t_point *dst)
+void	edu_equation_05(t_point *po)
 {
-	float x;
-	float y;
-	float a;
-	float b;
-
-	a = 0.61;
-	b = 0.78;
-	x = src->x * cos(b) + src->y - src->z * sin(b);
-	y = src->x * sin(b) * sin(a) + src->y * cos(a);
-
-	src->x = (int) x;
-	src->y = (int) y;
-
-	a = 0.61;
-	b = 0.78;
-	x = dst->x * cos(b) + dst->y - dst->z * sin(b);
-	y = dst->x * sin(b) * sin(a) + dst->y * cos(a);
-
-	dst->x = (int) x;
-	dst->y = (int) y;
-
-}
-
-void	edu_equation_02(t_point *src, t_point *dst)
-{
-	float	x;
-	float	y;
-
-	x = (src->x - src->z) / sqrt(2); 
-  	y = (src->x + 2 * src->y + src->z) / sqrt(6);
-	src->x = (int) x;
-	src->y = (int) y;
-
-	x = (dst->x - dst->z) / sqrt(2); 
-  	y = (dst->x + 2 * dst->y + dst->z) / sqrt(6);
-	dst->x = (int) x;
-	dst->y = (int) y;
-}
-
-void    edu_equation_03(t_point *p)
-{
+	float B = 0.785;
+	float C = 0.955;
 	int x;
 	int y;
-	float A;
-	float B;
-
-	A = 0.615;
-	B = 0.785;
-
-    x = (p->z * sin(A)) + (p->x * cos(A));
-    y = (p->z * cos(A) * sin(B)) - (p->x * sin(A) * sin(B)) + (p->y * cos(B));
-
-	p->x = x;
-	p->y = y;
-	p->z = 0;
+	
+	x = (po->x * cos(B)) - (po->z * sin(B));
+    y = (po->x * cos(C) * cos(B)) + (po->y * cos(C) * cos(B)) - (po->z * sin(C));
+	po->x = x;
+	po->y = y;
 }
+// void	edu_equation(t_point *src, t_point *dst)
+// {
+// 	float x;
+// 	float y;
+// 	float a;
+// 	float b;
 
-void    edu_equation_04(t_point *p)
-{
-	int x;
-	int y;
-	float A;
-	float B;
+// 	a = 0.61;
+// 	b = 0.78;
+// 	x = src->x * cos(b) + src->y - src->z * sin(b);
+// 	y = src->x * sin(b) * sin(a) + src->y * cos(a);
 
-	B = 0.615;
-	A = 0.785;
+// 	src->x = (int) x;
+// 	src->y = (int) y;
 
-	x = p->z * cos(B) - p->x * sin(B);
-	y = p->z * sin(A) * sin(B) + p->y * cos(A) + p->x * sin(A) * cos(B);
+// 	a = 0.61;
+// 	b = 0.78;
+// 	x = dst->x * cos(b) + dst->y - dst->z * sin(b);
+// 	y = dst->x * sin(b) * sin(a) + dst->y * cos(a);
 
-	p->x = x;
-	p->y = y;
-	p->z = 0;
-}
+// 	dst->x = (int) x;
+// 	dst->y = (int) y;
+
+// }
+
+// void	edu_equation_02(t_point *src, t_point *dst)
+// {
+// 	float	x;
+// 	float	y;
+
+// 	x = (src->x - src->z) / sqrt(2); 
+//   	y = (src->x + 2 * src->y + src->z) / sqrt(6);
+// 	src->x = (int) x;
+// 	src->y = (int) y;
+
+// 	x = (dst->x - dst->z) / sqrt(2); 
+//   	y = (dst->x + 2 * dst->y + dst->z) / sqrt(6);
+// 	dst->x = (int) x;
+// 	dst->y = (int) y;
+// }
+
+// void    edu_equation_03(t_point *p)
+// {
+// 	int x;
+// 	int y;
+// 	float A;
+// 	float B;
+
+// 	A = 0.615;
+// 	B = 0.785;
+
+//     x = (p->z * sin(A)) + (p->x * cos(A));
+//     y = (p->z * cos(A) * sin(B)) - (p->x * sin(A) * sin(B)) + (p->y * cos(B));
+
+// 	p->x = x;
+// 	p->y = y;
+// 	p->z = 0;
+// }
+
+// void    edu_equation_04(t_point *p)
+// {
+// 	int x;
+// 	int y;
+// 	float A;
+// 	float B;
+
+// 	B = 0.615;
+// 	A = 0.785;
+
+// 	x = p->z * cos(B) - p->x * sin(B);
+// 	y = p->z * sin(A) * sin(B) + p->y * cos(A) + p->x * sin(A) * cos(B);
+
+// 	p->x = x;
+// 	p->y = y;
+// 	p->z = 0;
+// }
 
 /*
 
