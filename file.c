@@ -81,22 +81,31 @@ int	get_crd(char *s)
 {
 	char  *color;
 	t_crd c;
+	char z;
 
 	color = ft_strchr(s, ',');
 	if (color)
 	{
+		z = ft_substr(s, 0, color - s);
+		c.z = ft_atoi(z);
 		color++;
+		c.color = ft_atoi_base(color, 16);
+		free(z);
+	} 
+	else {
+		c.z     = ft_atoi(s);
+		c.color = NULL;
 	}
 }
 
 int	*get_line(char *raw_line, int size)
 {
 	char	**mt;
-	int 	*p;
+	t_crd 	*p;
 	int 	i;
 
 	i = 0;
-	p = ft_calloc(size, sizeof(int));
+	p = ft_calloc(size, sizeof(t_crd));
 	mt = get_mt(raw_line);
 	if (get_mt_size((void**) mt) != size)
 	{
@@ -105,8 +114,8 @@ int	*get_line(char *raw_line, int size)
 	}
 	while (mt[i])
 	{
-		get_color()
-		p[i] = ft_atoi(mt[i]);
+		p[i] = get_crd(mt[i]);
+		// p[i] = ft_atoi(mt[i]);
 		i++;
 	}
 	free_mt((void **) mt);

@@ -18,7 +18,7 @@ all: $(NAME)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(NAME): $(OBJS) $(LIBFT)
-	clang $(CFLAGS) -o $@ $(LIBS) -L lib $(OBJS)
+	$(CC) $(CFLAGS) -o $@ $(LIBS) -L lib $(OBJS)
 
 $(LIBFT):
 	make bonus -C $(LIBFT_DIR)
