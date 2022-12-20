@@ -8,7 +8,6 @@ void	init_fdf(t_fdf *fdf)
 	fdf->y0 = 0;
 	fdf->mlx_ptr = NULL;
 	fdf->win_ptr = NULL;
-	fdf->img_ptr = NULL;
 	fdf->coord = NULL;
 	fdf->angle = 0.5;
 }
@@ -77,12 +76,13 @@ void	get_xy(t_fdf *fdf, char *filename)
 	close(fd);
 }
 
-int	get_crd(char *s)
+t_crd	get_crd(char *s)
 {
-	char  *color;
-	t_crd c;
-	char z;
+	char	*color;
+	t_crd	c;
+	char	*z;
 
+	// c = ft_calloc(1, sizeof(t_crd));
 	color = ft_strchr(s, ',');
 	if (color)
 	{
@@ -94,11 +94,12 @@ int	get_crd(char *s)
 	} 
 	else {
 		c.z     = ft_atoi(s);
-		c.color = NULL;
+		c.color = WHITE;
 	}
+	return (c);
 }
 
-int	*get_line(char *raw_line, int size)
+t_crd	*get_line(char *raw_line, int size)
 {
 	char	**mt;
 	t_crd 	*p;
@@ -132,7 +133,7 @@ void	print_coordinates(t_fdf *fdf)
 	{
 		i = 0;
 		while(i < fdf->x)
-			ft_printf("[%i] ", fdf->coord[j][i++]);
+			ft_printf("[%i] ", fdf->coord[j][i++].z);
 		ft_printf("\n");
 		j++;
 	}	

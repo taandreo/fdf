@@ -6,66 +6,88 @@
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/07 19:45:41 by tairribe          #+#    #+#             */
-/*   Updated: 2022/12/14 22:49:19 by tairribe         ###   ########.fr       */
+/*   Updated: 2022/12/20 17:46:30 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
-
-void	put_line_simple(t_fdf fdf, int x, int y, int size)
-{
-	int i;
-	
-	i = 0;
-	while (i < size){
-		mlx_pixel_put(fdf.mlx_ptr, fdf.win_ptr, x, y, WHITE);
-		x++;
-		i++;
-	}
-}
 
 void	free_fdf(t_fdf *fdf)
 {
 	free_mt((void **) fdf->coord);
 }
 
+int	ft_min(int a, int b)
+{
+	if (a < b)
+		return a;
+	else
+		return b;
+}
+
+void	calc_linesize(t_fdf *fdf)
+{
+	fdf->line_size = ft_min(fdf->win_width / fdf->x / 2, fdf->win_height / fdf->y / 2);
+	if (fdf->line_size < LINESIZE_MIN)
+		fdf->line_size = LINESIZE_MIN;
+}
+
 int	start_fdf(t_fdf *fdf, char *filename)
 {
+	fdf->win_height = HEIGHT;
+	fdf->win_width = WIDTH;
+	calc_linesize(fdf);
+	ft_printf("line_size: %i\n", fdf->line_size);
 	if ((fdf->mlx_ptr = mlx_init()) == NULL)
 	{
 		free_fdf(fdf);
 		print_error("Starting mlx.");
 	}
-	fdf->win_ptr = mlx_new_window(fdf->mlx_ptr, WIDTH, HEIGHT, filename);
-	// fdf->img_ptr = mlx_new_image(fdf->mlx_ptr, WIDTH, HEIGHT);
+	if ((fdf->win_ptr = mlx_new_window(fdf->mlx_ptr, fdf->win_width, fdf->win_height, filename)) == NULL)
+	{
+		free_fdf(fdf);
+		print_error("Starting new window.");
+	}
 	start_point(fdf);
 	return(0);
 }
 
-t_point	init_point(int x, int y, int z)
+void	start_img(t_fdf *fdf, t_img *img)
+{
+	if ((img->ptr = mlx_new_image(fdf->mlx_ptr, fdf->win_width, fdf->win_height)) == NULL)
+	{
+		free_fdf(fdf);
+		print_error("Starting new image.");
+	}
+	img->data = mlx_get_data_addr(img->ptr, &img->pixels, &img->size_line, &img->endian);
+	fdf->img = img;
+}
+
+t_point	init_point(int x, int y, int z, int color)
 {
 	t_point po;
 	
 	po.x = x;
 	po.y = y;
 	po.z = z;
+	po.color = color;
 
 	return (po);
 }
 
 void	new_line(t_fdf *fdf, t_point *src, t_point *dst)
 {
-	zoom(src);
+	zoom(fdf, src);
 	centralize_before(fdf, src);
-	make3d(src, fdf->angle, 20);
-	centralize_after(src);
+	make3d(src, fdf->angle, fdf->line_size);
+	centralize_after(fdf, src);
 
-	zoom(dst);
+	zoom(fdf, dst);
 	centralize_before(fdf, dst);
-	make3d(dst, fdf->angle, 20);
-	centralize_after(dst);
-
-	bresenham(fdf, src->x, src->y, dst->x, dst->y);
+	make3d(dst, fdf->angle, fdf->line_size);
+	centralize_after(fdf, dst);
+	
+	bresenham(fdf, src, dst);
 }
 
 void	draw(t_fdf *fdf)
@@ -83,44 +105,35 @@ void	draw(t_fdf *fdf)
 		{	
 			if (x != fdf->x -1)
 			{
-				src = init_point(x, y, fdf->coord[y][x]);
-				dst = init_point(x + 1, y, fdf->coord[y][x + 1]);
+				src = init_point(x, y, fdf->coord[y][x].z, fdf->coord[y][x].color);
+				dst = init_point(x + 1, y, fdf->coord[y][x + 1].z, fdf->coord[y][x + 1].color);
 				new_line(fdf, &src, &dst);
 			}
 			if (y != fdf->y - 1){
-				src = init_point(x, y, fdf->coord[y][x]);
-				dst = init_point(x, y + 1, fdf->coord[y + 1][x]);
+				src = init_point(x, y, fdf->coord[y][x].z, fdf->coord[y][x].color);
+				dst = init_point(x, y + 1, fdf->coord[y + 1][x].z, fdf->coord[y + 1][x].color);
 				new_line(fdf, &src, &dst);
 			}
 			x++;
 		}
 		y++;
 	}
+	mlx_put_image_to_window(fdf->mlx_ptr, fdf->win_ptr, fdf->img->ptr, 0, 0);
 }
 
 int	main(int argc, char *argv[])
 {
 	char	*filename;
 	t_fdf	fdf;
+	t_img   img;
 
 	if (argc != 2)
 		usage();
 	
 	filename = argv[1];
 	get_coordinates(&fdf, filename);
-	// centralize(&fdf);
 	start_fdf(&fdf, filename);
+	start_img(&fdf, &img);
 	draw(&fdf);
 	mlx_loop(fdf.mlx_ptr);
-	// if (fdf.mlx_ptr == NULL)
-	// 	print_error("setting up the connection to the graphical system");
-	
-	// if (fdf.win_ptr == NULL)
-	// 	print_error("creating a new window");
-	
-	// put_line_simple(fdf, 100, 100, 100);
-	// // mlx_string_put(fdf.mlx_ptr, fdf.win_ptr, 10, 10, WHITE, "42asdfasdfasdfasdfasdfasdfasdfasdfasd");
-	// mlx_loop(fdf.mlx_ptr);
-	// // printf("%i\n", fd);
-	// mlx_destroy_window(fdf.mlx_ptr, fdf.win_ptr);
 }

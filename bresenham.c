@@ -3,14 +3,16 @@
 void	bresenham_dx(t_fdf *fdf, t_bresenham *bre);
 void	bresenham_dy(t_fdf *fdf, t_bresenham *bre);
 
-void	bresenham(t_fdf *fdf, int x0, int y0, int x1, int y1)
+void	bresenham(t_fdf *fdf, t_point *src, t_point *dst)
 {
 	t_bresenham bre;
 	
-	bre.x0 = x0;
-	bre.x1 = x1;
-	bre.y0 = y0;
-	bre.y1 = y1;
+	bre.x0 = src->x;
+	bre.y0 = src->y;
+	bre.x1 = dst->x;
+	bre.y1 = dst->y;
+	bre.c0 = src->color;
+	bre.c1 = dst->color;
 
 	bre.dx = abs(bre.x1 - bre.x0);
 	bre.dy = abs(bre.y1 - bre.y0);
@@ -37,7 +39,7 @@ void	bresenham_dx(t_fdf *fdf, t_bresenham *bre)
 	bre->d = 2 * bre->dy - bre->dx;
 	while (1)
 	{
-		pixel(fdf, bre->x0, bre->y0, WHITE);
+		pixel(fdf, bre->x0, bre->y0, bre->c0);
 		if (bre->x0 == bre->x1)
 			break;
 		if (bre->d < 0)
@@ -57,7 +59,7 @@ void	bresenham_dy(t_fdf *fdf, t_bresenham *bre)
 	bre->d = 2 * bre->dx - bre->dy;
 	while (1)
 	{
-		pixel(fdf, bre->x0, bre->y0, WHITE);
+		pixel(fdf, bre->x0, bre->y0, bre->c0);
 		if (bre->y0 == bre->y1)
 			break;
 		if (bre->d < 0)

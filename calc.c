@@ -2,48 +2,58 @@
 
 void	pixel(t_fdf *fdf, int x, int y, int color)
 {
-	if (x > 0 && x < WIDTH && y > 0 && y < HEIGHT)
-		mlx_pixel_put(fdf->mlx_ptr, fdf->win_ptr, x, y, color);
+	char *pixel;
+
+	if (x < 0 || x > fdf->win_width || y < 0 || y > fdf->win_height)
+		return ;
+	pixel = fdf->img->data + (fdf->img->size_line * y) + \
+		((fdf->img->pixels / 8) * x);
+	*(unsigned int *)pixel = color;
 }
 
-void	centralize(t_fdf *fdf)
-{
-	fdf->x0 = (WIDTH  - fdf->x * LINESIZE) / 2;
-	fdf->y0 = (HEIGHT - fdf->y * LINESIZE) / 2;
-}
+
 
 void	start_point(t_fdf *fdf)
 {
-	fdf->x0 = (WIDTH / 2) - ((fdf->x / 2) * LINESIZE);
-	fdf->y0 = (HEIGHT / 2) - ((fdf->y / 2) * LINESIZE);
+	fdf->x0 = (fdf->win_width / 2) + ((fdf->x / 2) * fdf->line_size);
+	fdf->y0 = (fdf->win_height / 2) + ((fdf->y / 2) * fdf->line_size);
 	printf("x0: %i y0: %i\n", fdf->x0, fdf->y0);
 }
 
-void	centralize2(t_fdf *fdf, t_point *src, t_point *dst)
-{
-	src->x = src->x + fdf->x0;
-	src->y = src->y + fdf->y0;
+// void	centralize2(t_fdf *fdf, t_point *src, t_point *dst)
+// {
+// 	src->x = src->x + fdf->x0;
+// 	src->y = src->y + fdf->y0;
 
-	dst->x = dst->x + fdf->x0;
-	dst->y = dst->y + fdf->y0;
+// 	dst->x = dst->x + fdf->x0;
+// 	dst->y = dst->y + fdf->y0;
+// }
+
+void	centralize(t_fdf *fdf, t_point *po)
+{
+	po->x -= (fdf->x * fdf->line_size) / 2;
+	po->y -= (fdf->y * fdf->line_size) / 2;
+
+	po->x += fdf->win_width  / 2;
+	po->y += (fdf->win_height + (fdf->y * fdf->line_size) / 2) / 2;
 }
 
 void	centralize_before(t_fdf *fdf, t_point *po)
 {
-	po->x -= (fdf->x * LINESIZE) / 2;
-	po->y -= (fdf->y * LINESIZE) / 2;
+	po->x -= (fdf->x * fdf->line_size) / 2;
+	po->y -= (fdf->y * fdf->line_size) / 2;
 }
 
-void	centralize_after(t_point *po)
+void	centralize_after(t_fdf *fdf, t_point *po)
 {
-	po->x += WIDTH  / 2;
-	po->y += HEIGHT / 2;
+	po->x += fdf->win_width  / 2;
+	po->y += (fdf->win_height + (fdf->y * fdf->line_size) / 2) / 2;
 }
 
-void	zoom(t_point *po)
+void	zoom(t_fdf *fdf, t_point *po)
 {
-	po->x *= LINESIZE;
-	po->y *= LINESIZE;
+	po->x *= fdf->line_size;
+	po->y *= fdf->line_size;
 }
 
 void	make3d(t_point *po, double angle, double z)
@@ -57,18 +67,18 @@ void	make3d(t_point *po, double angle, double z)
 	po->y = (int) y;
 }
 
-void	edu_equation_05(t_point *po)
-{
-	float B = 0.785;
-	float C = 0.955;
-	int x;
-	int y;
+// void	edu_equation_05(t_point *po)
+// {
+// 	float B = 0.785;
+// 	float C = 0.955;
+// 	int x;
+// 	int y;
 	
-	x = (po->x * cos(B)) - (po->z * sin(B));
-    y = (po->x * cos(C) * cos(B)) + (po->y * cos(C) * cos(B)) - (po->z * sin(C));
-	po->x = x;
-	po->y = y;
-}
+// 	x = (po->x * cos(B)) - (po->z * sin(B));
+//     y = (po->x * cos(C) * cos(B)) + (po->y * cos(C) * cos(B)) - (po->z * sin(C));
+// 	po->x = x;
+// 	po->y = y;
+// }
 // void	edu_equation(t_point *src, t_point *dst)
 // {
 // 	float x;
