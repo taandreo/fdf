@@ -15,6 +15,10 @@
 # define WIDTH 1200
 # define HEIGHT 900
 # define LINESIZE_MIN 1
+# define Z_ANGLE 0.785
+# define X_ANGLE 0.955
+
+# define KEY_ESC 53
 
 typedef struct	s_point
 {
@@ -90,5 +94,8 @@ void	centralize2(t_fdf *fdf, t_point *src, t_point *dst);
 void	centralize(t_fdf *fdf, t_point *po);
 void	centralize_before(t_fdf *fdf, t_point *po);
 void	centralize_after(t_fdf *fdf, t_point *po);
+// 3D
+void    rotate_z(t_point *po, float angle);
+void    rotate_x(t_point *po, float angle, int zm);
 
 #endif

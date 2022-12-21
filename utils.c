@@ -13,6 +13,17 @@ void	print_error(char *s)
 	exit(1);
 }
 
+int	free_mt(void **mt)
+{
+	int	i;
+
+	i = 0;
+	while(mt[i])
+		free(mt[i++]);
+	free(mt);
+	return i;
+}
+
 int	ft_abs(int value)
 {
 	if (value < 0)

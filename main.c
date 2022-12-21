@@ -6,7 +6,7 @@
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/07 19:45:41 by tairribe          #+#    #+#             */
-/*   Updated: 2022/12/20 17:46:30 by tairribe         ###   ########.fr       */
+/*   Updated: 2022/12/21 18:10:15 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,24 @@
 
 void	free_fdf(t_fdf *fdf)
 {
-	free_mt((void **) fdf->coord);
+	// free_mt((void **) fdf->coord);
+	if (fdf->img)
+	{
+		// ft_printf("Image\n");
+		mlx_destroy_image(fdf->win_ptr, fdf->img->ptr);
+		// free(fdf->img->ptr);
+	}
+	// if (fdf->win_ptr)
+	// {
+	// 	ft_printf("window\n");
+	// 	mlx_destroy_window(fdf->mlx_ptr, fdf->win_ptr);
+	// 	// free(fdf->win_ptr);
+	// }
+	// if (fdf->mlx_ptr)
+	// {
+	// 	ft_printf("mlx\n");
+	// 	free(fdf->mlx_ptr);
+	// }
 }
 
 int	ft_min(int a, int b)
@@ -79,12 +96,14 @@ void	new_line(t_fdf *fdf, t_point *src, t_point *dst)
 {
 	zoom(fdf, src);
 	centralize_before(fdf, src);
-	make3d(src, fdf->angle, fdf->line_size);
+	rotate_z(src, Z_ANGLE);
+	rotate_x(src, X_ANGLE, fdf->line_size);
 	centralize_after(fdf, src);
 
 	zoom(fdf, dst);
 	centralize_before(fdf, dst);
-	make3d(dst, fdf->angle, fdf->line_size);
+	rotate_z(dst, Z_ANGLE);
+	rotate_x(dst, X_ANGLE, fdf->line_size);
 	centralize_after(fdf, dst);
 	
 	bresenham(fdf, src, dst);
@@ -121,6 +140,13 @@ void	draw(t_fdf *fdf)
 	mlx_put_image_to_window(fdf->mlx_ptr, fdf->win_ptr, fdf->img->ptr, 0, 0);
 }
 
+int	key_press(int keycode, void *param)
+{
+	if (keycode == KEY_ESC)
+		free_fdf((t_fdf *) param);
+	return (0);
+}
+
 int	main(int argc, char *argv[])
 {
 	char	*filename;
@@ -135,5 +161,6 @@ int	main(int argc, char *argv[])
 	start_fdf(&fdf, filename);
 	start_img(&fdf, &img);
 	draw(&fdf);
+	mlx_key_hook(fdf.win_ptr, key_press, &fdf);
 	mlx_loop(fdf.mlx_ptr);
 }

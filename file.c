@@ -35,17 +35,6 @@ int	open_file(char *filename)
 	return (fd);
 }
 
-int	free_mt(void **mt)
-{
-	int	i;
-
-	i = 0;
-	while(mt[i])
-		free(mt[i++]);
-	free(mt);
-	return i;
-}
-
 char	**get_mt(char *s)
 {
 	char *l;
