@@ -5,8 +5,13 @@ INCLUDES = libmlx_mac
 NAME = fdf
 LIBFT = ./lib/libft.a
 LIBFT_DIR = ./libft
-CFLAGS = -Wall -Wextra -Werror -arch x86_64 
-LIBS = -lmlx -lft -framework OpenGL -framework AppKit
+CFLAGS = -Wall -Wextra -Werror -arch x86_64
+UNAME := $(shell uname)
+LIBS := -lmlx -lXext -lX11 -lft
+
+ifeq ($(UNAME), Darwin)
+	LIBS = -lmlx -lft -framework OpenGL -framework AppKit
+endif
 
 SOURCES = main.c utils.c calc.c file.c bresenham.c
 
