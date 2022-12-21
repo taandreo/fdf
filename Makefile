@@ -5,11 +5,12 @@ INCLUDES = libmlx_mac
 NAME = fdf
 LIBFT = ./lib/libft.a
 LIBFT_DIR = ./libft
-CFLAGS = -Wall -Wextra -Werror -arch x86_64
+CFLAGS = -Wall -Wextra -Werror
 UNAME := $(shell uname)
 LIBS := -lmlx -lXext -lX11 -lft
 
 ifeq ($(UNAME), Darwin)
+	CFLAGS = -Wall -Wextra -Werror -arch x86_64
 	LIBS = -lmlx -lft -framework OpenGL -framework AppKit
 endif
 
