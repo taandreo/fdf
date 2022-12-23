@@ -6,13 +6,13 @@
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/07 19:45:41 by tairribe          #+#    #+#             */
-/*   Updated: 2022/12/23 01:29:17 by tairribe         ###   ########.fr       */
+/*   Updated: 2022/12/23 17:37:38 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
-void	exit_fdf(t_fdf *fdf)
+int	exit_fdf(t_fdf *fdf)
 {
 	free_mt((void **) fdf->coord);
 	if (fdf->img)
@@ -28,6 +28,7 @@ void	exit_fdf(t_fdf *fdf)
 		free(fdf->mlx_ptr);
 	}
 	exit(0);
+	return(0);
 }
 
 int	ft_min(int a, int b)
@@ -196,5 +197,6 @@ int	main(int argc, char *argv[])
 	start_fdf(&fdf, filename);
 	draw(&fdf);
 	mlx_key_hook(fdf.win_ptr, key_press, &fdf);
+	mlx_hook(fdf.win_ptr, 17, 0, exit_fdf, &fdf);
 	mlx_loop(fdf.mlx_ptr);
 }
