@@ -3,22 +3,27 @@
 
 #include <stdio.h>
 #include <unistd.h>
-#include "libft/include/libft.h"
-#include "libft/include/ft_printf.h"
+#include "libft.h"
+#include "ft_printf.h"
 #include <strings.h>
 #include <stdlib.h>
 #include <mlx.h>
 #include <fcntl.h>
 #include <math.h>
+#include <X11/keysymdef.h> 
 
 # define WHITE 0xFFFFFF
-# define WIDTH 1200
-# define HEIGHT 900
+// # define WIDTH 1200
+// # define HEIGHT 900
+
+# define WIDTH 2560
+# define HEIGHT 1440
+
 # define LINESIZE_MIN 1
 # define Z_ANGLE 0.785
 # define X_ANGLE 0.955
 
-# define KEY_ESC 53
+#define KEY_ESC 0xff1b
 
 typedef struct	s_point
 {
@@ -62,6 +67,7 @@ typedef struct	s_fdf
 {
 	int			x;
 	int			y;
+	int			z;
 	int			x0;
 	int			y0;
 	int			win_width;
@@ -73,8 +79,6 @@ typedef struct	s_fdf
 	double		angle;
 	t_img		*img;
 }				t_fdf;
-
-
 
 void	get_coordinates(t_fdf *fdf, char *filename);
 

@@ -59,6 +59,8 @@ void	get_xy(t_fdf *fdf, char *filename)
 	fdf->x = free_mt((void **) get_mt(line));
 	while (line)
 	{
+		if (fdf->y)
+			free(line);
 		fdf->y++;
 		line = get_next_line(fd);
 	}
@@ -71,7 +73,6 @@ t_crd	get_crd(char *s)
 	t_crd	c;
 	char	*z;
 
-	// c = ft_calloc(1, sizeof(t_crd));
 	color = ft_strchr(s, ',');
 	if (color)
 	{
@@ -105,7 +106,6 @@ t_crd	*get_line(char *raw_line, int size)
 	while (mt[i])
 	{
 		p[i] = get_crd(mt[i]);
-		// p[i] = ft_atoi(mt[i]);
 		i++;
 	}
 	free_mt((void **) mt);
@@ -137,7 +137,7 @@ void	get_coordinates(t_fdf *fdf, char *filename)
 	init_fdf(fdf);
 	get_xy(fdf, filename);
 	fd = open_file(filename);
-	fdf->coord = ft_calloc(fdf->y, sizeof(int*) + 1);
+	fdf->coord = ft_calloc(fdf->y, sizeof(t_crd*) + 1);
 	fdf->coord[fdf->y] = NULL;
 	i = 0;
 	while (i < fdf->y)
@@ -145,6 +145,5 @@ void	get_coordinates(t_fdf *fdf, char *filename)
 		raw_line = get_next_line(fd);
 		fdf->coord[i++] = get_line(raw_line, fdf->x);
 	}
-	// print_coordinates(fdf);
 	close(fd);
 }

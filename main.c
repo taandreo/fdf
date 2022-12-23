@@ -6,32 +6,28 @@
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/07 19:45:41 by tairribe          #+#    #+#             */
-/*   Updated: 2022/12/21 18:10:15 by tairribe         ###   ########.fr       */
+/*   Updated: 2022/12/23 01:29:17 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
-void	free_fdf(t_fdf *fdf)
+void	exit_fdf(t_fdf *fdf)
 {
-	// free_mt((void **) fdf->coord);
+	free_mt((void **) fdf->coord);
 	if (fdf->img)
 	{
-		// ft_printf("Image\n");
-		mlx_destroy_image(fdf->win_ptr, fdf->img->ptr);
-		// free(fdf->img->ptr);
+		mlx_destroy_image(fdf->mlx_ptr, fdf->img->ptr);
+		free(fdf->img);
 	}
-	// if (fdf->win_ptr)
-	// {
-	// 	ft_printf("window\n");
-	// 	mlx_destroy_window(fdf->mlx_ptr, fdf->win_ptr);
-	// 	// free(fdf->win_ptr);
-	// }
-	// if (fdf->mlx_ptr)
-	// {
-	// 	ft_printf("mlx\n");
-	// 	free(fdf->mlx_ptr);
-	// }
+	if (fdf->win_ptr)
+		mlx_destroy_window(fdf->mlx_ptr, fdf->win_ptr);
+	if (fdf->mlx_ptr)
+	{
+		mlx_destroy_display(fdf->mlx_ptr);
+		free(fdf->mlx_ptr);
+	}
+	exit(0);
 }
 
 int	ft_min(int a, int b)
@@ -51,33 +47,38 @@ void	calc_linesize(t_fdf *fdf)
 
 int	start_fdf(t_fdf *fdf, char *filename)
 {
+	fdf->img = NULL;
 	fdf->win_height = HEIGHT;
 	fdf->win_width = WIDTH;
 	calc_linesize(fdf);
+	fdf->z = fdf->line_size;
 	ft_printf("line_size: %i\n", fdf->line_size);
 	if ((fdf->mlx_ptr = mlx_init()) == NULL)
 	{
-		free_fdf(fdf);
+		exit_fdf(fdf);
 		print_error("Starting mlx.");
 	}
 	if ((fdf->win_ptr = mlx_new_window(fdf->mlx_ptr, fdf->win_width, fdf->win_height, filename)) == NULL)
 	{
-		free_fdf(fdf);
+		exit_fdf(fdf);
 		print_error("Starting new window.");
 	}
 	start_point(fdf);
 	return(0);
 }
 
-void	start_img(t_fdf *fdf, t_img *img)
+void	start_img(t_fdf *fdf)
 {
-	if ((img->ptr = mlx_new_image(fdf->mlx_ptr, fdf->win_width, fdf->win_height)) == NULL)
+	if (fdf->img == NULL)
+		fdf->img = ft_calloc(1, sizeof(t_img));
+	else
+		mlx_destroy_image(fdf->mlx_ptr, fdf->img->ptr);
+	if ((fdf->img->ptr = mlx_new_image(fdf->mlx_ptr, fdf->win_width, fdf->win_height)) == NULL)
 	{
-		free_fdf(fdf);
 		print_error("Starting new image.");
+		exit_fdf(fdf);
 	}
-	img->data = mlx_get_data_addr(img->ptr, &img->pixels, &img->size_line, &img->endian);
-	fdf->img = img;
+	fdf->img->data = mlx_get_data_addr(fdf->img->ptr, &fdf->img->pixels, &fdf->img->size_line, &fdf->img->endian);
 }
 
 t_point	init_point(int x, int y, int z, int color)
@@ -97,13 +98,13 @@ void	new_line(t_fdf *fdf, t_point *src, t_point *dst)
 	zoom(fdf, src);
 	centralize_before(fdf, src);
 	rotate_z(src, Z_ANGLE);
-	rotate_x(src, X_ANGLE, fdf->line_size);
+	rotate_x(src, X_ANGLE, fdf->z);
 	centralize_after(fdf, src);
 
 	zoom(fdf, dst);
 	centralize_before(fdf, dst);
 	rotate_z(dst, Z_ANGLE);
-	rotate_x(dst, X_ANGLE, fdf->line_size);
+	rotate_x(dst, X_ANGLE, fdf->z);
 	centralize_after(fdf, dst);
 	
 	bresenham(fdf, src, dst);
@@ -117,6 +118,7 @@ void	draw(t_fdf *fdf)
 	int		y;
 	
 	y = 0;
+	start_img(fdf);
 	while(y < fdf->y)
 	{
 		x = 0;
@@ -140,10 +142,45 @@ void	draw(t_fdf *fdf)
 	mlx_put_image_to_window(fdf->mlx_ptr, fdf->win_ptr, fdf->img->ptr, 0, 0);
 }
 
+void	zoom_control(t_fdf *fdf, int keycode)
+{
+	if (fdf->line_size < 1)
+		return ;
+	if (keycode == 'w')
+	{
+		fdf->line_size++;
+		draw(fdf);
+	}
+	if (keycode == 's') {
+		fdf->line_size--;
+		draw(fdf);
+	}
+}
+
+void	z_control(t_fdf *fdf, int keycode)
+{
+	if (keycode == 'z')
+	{
+		fdf->z++;
+		draw(fdf);
+	}
+	if (keycode == 'x') {
+		fdf->z--;
+		draw(fdf);
+	}
+}
+
 int	key_press(int keycode, void *param)
 {
+	t_fdf *fdf;
+
+	fdf = param;
 	if (keycode == KEY_ESC)
-		free_fdf((t_fdf *) param);
+		exit_fdf((t_fdf *) param);
+	if (ft_strrchr("ws", keycode))
+		zoom_control(fdf, keycode);
+	if (ft_strrchr("zx", keycode))
+		z_control(fdf, keycode);
 	return (0);
 }
 
@@ -151,15 +188,12 @@ int	main(int argc, char *argv[])
 {
 	char	*filename;
 	t_fdf	fdf;
-	t_img   img;
-
 	if (argc != 2)
 		usage();
 	
 	filename = argv[1];
 	get_coordinates(&fdf, filename);
 	start_fdf(&fdf, filename);
-	start_img(&fdf, &img);
 	draw(&fdf);
 	mlx_key_hook(fdf.win_ptr, key_press, &fdf);
 	mlx_loop(fdf.mlx_ptr);

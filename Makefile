@@ -1,13 +1,13 @@
 .PHONY: libft.a all clean fclean re log bonus
 
-CC = cc
+CC = clang
 INCLUDES = libmlx_mac
 NAME = fdf
 LIBFT = ./lib/libft.a
 LIBFT_DIR = ./libft
 CFLAGS = -Wall -Wextra -Werror
 UNAME := $(shell uname)
-LIBS := -lmlx -lXext -lX11 -lft
+LIBS := -lmlx -lXext -lX11 -lft -lm
 
 ifeq ($(UNAME), Darwin)
 	CFLAGS = -Wall -Wextra -Werror -arch x86_64
@@ -21,14 +21,13 @@ OBJS = $(SOURCES:.c=.o)
 all: $(NAME)
 
 %.o: %.c fdf.h
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@ -I libft/include
 
 $(NAME): $(OBJS) $(LIBFT)
-	$(CC) $(CFLAGS) -o $@ $(LIBS) -L lib $(OBJS)
+	$(CC) $(CFLAGS) $(OBJS) -o $@ $(LIBS) -L $(LIBFT_DIR)
 
 $(LIBFT):
 	make bonus -C $(LIBFT_DIR)
-	cp -fp libft/libft.a lib/
 
 clean:
 	rm -f $(OBJS)
@@ -50,6 +49,7 @@ libmlx_mac:
 libmlx_linux:
 	wget https://projects.intra.42.fr/uploads/document/document/9393/minilibx-linux.tgz
 	tar -xf minilibx-linux.tgz && rm -f minilibx-linux.tgz
+	sudo apt-get install gcc make xorg libxext-dev libbsd-dev
 
 maps:
 	wget https://projects.intra.42.fr/uploads/document/document/9390/maps.zip

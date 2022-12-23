@@ -18,7 +18,6 @@ void	start_point(t_fdf *fdf)
 	printf("x0: %i y0: %i\n", fdf->x0, fdf->y0);
 }
 
-
 void	centralize_before(t_fdf *fdf, t_point *po)
 {
 	po->x -= (fdf->x * fdf->line_size) / 2;

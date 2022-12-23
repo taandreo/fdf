@@ -1,6 +1,6 @@
-lib/
+lib/*
 libft/
-minilibx_macos/
+minilibx*/
 ignore/
 fdf
 .*
