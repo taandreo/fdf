@@ -1,39 +1,50 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   utils2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/12/23 19:42:24 by tairribe          #+#    #+#             */
-/*   Updated: 2022/12/23 19:43:26 by tairribe         ###   ########.fr       */
+/*   Created: 2022/12/23 19:42:07 by tairribe          #+#    #+#             */
+/*   Updated: 2022/12/23 19:44:31 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
-void	usage(void)
+int	free_mt(void **mt)
 {
-	ft_putstr_fd("usage: fdf <filename>\n", 2);
-	exit(1);
+	int	i;
+
+	i = 0;
+	while (mt[i])
+		free(mt[i++]);
+	free(mt);
+	return (i);
 }
 
-void	print_error(char *s)
+int	ft_min(int a, int b)
 {
-	ft_putstr_fd("Error: ", 2);
-	ft_putendl_fd(s, 2);
-	exit(1);
+	if (a < b)
+		return (a);
+	else
+		return (b);
 }
 
-int	open_file(char *filename)
+int	ft_abs(int value)
 {
-	int	fd;
+	if (value < 0)
+		return (-value);
+	else
+		return (value);
+}
 
-	fd = open(filename, O_RDONLY);
-	if (fd < 0)
-	{
-		perror(filename);
-		exit (1);
-	}
-	return (fd);
+int	get_mt_size(void **mt)
+{
+	int	i;
+
+	i = 0;
+	while (mt[i])
+		i++;
+	return (i);
 }

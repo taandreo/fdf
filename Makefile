@@ -14,7 +14,7 @@ ifeq ($(UNAME), Darwin)
 	LIBS = -lmlx -lft -framework OpenGL -framework AppKit
 endif
 
-SOURCES = main.c utils.c calc.c file.c bresenham.c
+SOURCES = main.c utils.c calc.c parse.c bresenham.c draw.c hooks.c pixel.c
 
 OBJS = $(SOURCES:.c=.o)
 

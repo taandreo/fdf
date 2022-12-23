@@ -1,39 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   pixel.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/12/23 19:42:24 by tairribe          #+#    #+#             */
-/*   Updated: 2022/12/23 19:43:26 by tairribe         ###   ########.fr       */
+/*   Created: 2022/12/23 19:39:19 by tairribe          #+#    #+#             */
+/*   Updated: 2022/12/23 19:52:43 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
-void	usage(void)
+void	pixel(t_fdf *fdf, int x, int y, int color)
 {
-	ft_putstr_fd("usage: fdf <filename>\n", 2);
-	exit(1);
-}
+	char	*pixel;
 
-void	print_error(char *s)
-{
-	ft_putstr_fd("Error: ", 2);
-	ft_putendl_fd(s, 2);
-	exit(1);
-}
-
-int	open_file(char *filename)
-{
-	int	fd;
-
-	fd = open(filename, O_RDONLY);
-	if (fd < 0)
-	{
-		perror(filename);
-		exit (1);
-	}
-	return (fd);
+	if (x < 0 || x > fdf->win_width || y < 0 || y > fdf->win_height)
+		return ;
+	pixel = fdf->img->data + (fdf->img->size_line * y) + \
+		((fdf->img->pixels / 8) * x);
+	*(unsigned int *)pixel = color;
 }

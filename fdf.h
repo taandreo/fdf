@@ -1,57 +1,70 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   fdf.h                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/12/23 19:45:29 by tairribe          #+#    #+#             */
+/*   Updated: 2022/12/23 19:50:06 by tairribe         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef FDF_H
 # define FDF_H
 
-#include <stdio.h>
-#include <unistd.h>
-#include "libft.h"
-#include "ft_printf.h"
-#include <strings.h>
-#include <stdlib.h>
-#include <mlx.h>
-#include <fcntl.h>
-#include <math.h>
-#include <X11/keysymdef.h> 
+# include <stdio.h>
+# include <unistd.h>
+# include "libft.h"
+# include "ft_printf.h"
+# include <strings.h>
+# include <stdlib.h>
+# include <mlx.h>
+# include <fcntl.h>
+# include <math.h>
+# include <X11/keysymdef.h> 
 
 # define WHITE 0xFFFFFF
-// # define WIDTH 1200
-// # define HEIGHT 900
+# define WIDTH 1200
+# define HEIGHT 900
 
-# define WIDTH 2560
-# define HEIGHT 1440
+// # define WIDTH 2560
+// # define HEIGHT 1440
 
 # define LINESIZE_MIN 1
 # define Z_ANGLE 0.785
 # define X_ANGLE 0.955
 
-#define KEY_ESC 0xff1b
+# define KEY_ESC 0xff1b
+# define WIN_CLOSE 17
 
-typedef struct	s_point
+typedef struct s_point
 {
 	int			x;
 	int			y;
 	int			z;
 	int			color;
-} 				t_point;
+}				t_point;
 
-typedef struct	s_bresenham
+typedef struct s_bresenham
 {
 	int	dx;
-	int dy;
-	int ix;
-	int iy;
+	int	dy;
+	int	ix;
+	int	iy;
 	int	x0;
-	int y0;
-	int x1;
-	int y1;
-	int c0;
-	int c1;
-	int d;
-} 				t_bresenham;
+	int	y0;
+	int	x1;
+	int	y1;
+	int	c0;
+	int	c1;
+	int	d;
+}			t_bresenham;
 
 typedef struct s_crd
 {
 	int	color;
-	int z;
+	int	z;
 }		t_crd;
 
 typedef struct s_img
@@ -61,9 +74,9 @@ typedef struct s_img
 	int			pixels;
 	int			size_line;
 	int			endian;
-} t_img;
+}				t_img;
 
-typedef struct	s_fdf
+typedef struct s_fdf
 {
 	int			x;
 	int			y;
@@ -80,26 +93,30 @@ typedef struct	s_fdf
 	t_img		*img;
 }				t_fdf;
 
+// FILE
 void	get_coordinates(t_fdf *fdf, char *filename);
-
-void	print_error(char *s);
-void	usage();
+// BRESENHAM
 void	bresenham(t_fdf *fdf, t_point *src, t_point *dst);
-void	make3d(t_point *po, double angle, double z);
-void	edu_equation_05(t_point *po);
-int		free_mt(void **mt);
-
-int		ft_abs(int value);
+// MAIN
+int		exit_fdf(t_fdf *fdf);
+// DRAW
+void	draw(t_fdf *fdf);
+// PIXEL
 void	pixel(t_fdf *fdf, int x, int y, int color);
+// CALC
 void	zoom(t_fdf *fdf, t_point *po);
-void	start_point(t_fdf *fdf);
-// CENTRALIZE
-void	centralize2(t_fdf *fdf, t_point *src, t_point *dst);
-void	centralize(t_fdf *fdf, t_point *po);
 void	centralize_before(t_fdf *fdf, t_point *po);
 void	centralize_after(t_fdf *fdf, t_point *po);
-// 3D
-void    rotate_z(t_point *po, float angle);
-void    rotate_x(t_point *po, float angle, int zm);
-
+void	rotate_z(t_point *po, float angle);
+void	rotate_x(t_point *po, float angle, int zm);
+// UTILS
+int		ft_min(int a, int b);
+int		get_mt_size(void **mt);
+int		free_mt(void **mt);
+int		open_file(char *filename);
+void	print_error(char *s);
+void	usage(void);
+int		ft_abs(int value);
+// HOOKS
+int		key_press(int keycode, void *param);
 #endif
