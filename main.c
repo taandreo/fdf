@@ -6,7 +6,7 @@
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/07 19:45:41 by tairribe          #+#    #+#             */
-/*   Updated: 2022/12/27 02:01:22 by tairribe         ###   ########.fr       */
+/*   Updated: 2022/12/27 03:57:39 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ void	init_fdf(t_fdf *fdf)
 	fdf->coord = NULL;
 	fdf->angle = 0.5;
 	fdf->z = 1;
+	fdf->up = 0;
 }
 
 int	exit_fdf(t_fdf *fdf)

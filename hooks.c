@@ -6,7 +6,7 @@
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/23 19:20:22 by tairribe          #+#    #+#             */
-/*   Updated: 2022/12/27 03:33:46 by tairribe         ###   ########.fr       */
+/*   Updated: 2022/12/27 04:01:13 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,15 @@ void	z_control(t_fdf *fdf, int keycode)
 	}
 }
 
+void	up_vision(t_fdf *fdf)
+{
+	if (fdf->up)
+		fdf->up = 0;
+	else
+		fdf->up = 1;
+	draw(fdf);
+}
+
 int	key_press(int keycode, void *param)
 {
 	t_fdf	*fdf;
@@ -54,6 +63,6 @@ int	key_press(int keycode, void *param)
 	if (ft_strrchr("zx", keycode))
 		z_control(fdf, keycode);
 	if (ft_strrchr("f", keycode))
-		z_control(fdf, keycode);	
+		up_vision(fdf);	
 	return (0);
 }

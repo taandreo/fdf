@@ -6,7 +6,7 @@
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/23 19:45:29 by tairribe          #+#    #+#             */
-/*   Updated: 2022/12/27 02:48:19 by tairribe         ###   ########.fr       */
+/*   Updated: 2022/12/27 03:56:58 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,7 @@ typedef struct s_fdf
 	void		*mlx_ptr;
 	void		*win_ptr;
 	double		angle;
+	int			up;
 	t_img		*img;
 }				t_fdf;
 
