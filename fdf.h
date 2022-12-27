@@ -6,7 +6,7 @@
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/23 19:45:29 by tairribe          #+#    #+#             */
-/*   Updated: 2022/12/23 19:50:06 by tairribe         ###   ########.fr       */
+/*   Updated: 2022/12/27 02:48:19 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ typedef struct s_fdf
 {
 	int			x;
 	int			y;
-	int			z;
+	float		z;
 	int			x0;
 	int			y0;
 	int			win_width;
@@ -108,7 +108,7 @@ void	zoom(t_fdf *fdf, t_point *po);
 void	centralize_before(t_fdf *fdf, t_point *po);
 void	centralize_after(t_fdf *fdf, t_point *po);
 void	rotate_z(t_point *po, float angle);
-void	rotate_x(t_point *po, float angle, int zm);
+void	rotate_x(t_point *po, float angle, float zm);
 // UTILS
 int		ft_min(int a, int b);
 int		get_mt_size(void **mt);

@@ -1,4 +1,4 @@
-.PHONY: libft.a all clean fclean re log bonus
+.PHONY: all clean fclean re log bonus libft
 
 CC = clang
 INCLUDES = libmlx_mac
@@ -23,11 +23,11 @@ all: $(NAME)
 %.o: %.c fdf.h
 	$(CC) $(CFLAGS) -c $< -o $@ -I libft/include
 
-$(NAME): $(OBJS) $(LIBFT)
+$(NAME): $(OBJS) | libft
 	$(CC) $(CFLAGS) $(OBJS) -o $@ $(LIBS) -L $(LIBFT_DIR)
 
-$(LIBFT):
-	make bonus -C $(LIBFT_DIR)
+libft:
+	make -C $(LIBFT_DIR)
 
 clean:
 	rm -f $(OBJS)

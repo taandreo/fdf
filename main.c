@@ -6,7 +6,7 @@
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/07 19:45:41 by tairribe          #+#    #+#             */
-/*   Updated: 2022/12/23 19:47:04 by tairribe         ###   ########.fr       */
+/*   Updated: 2022/12/27 02:01:22 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ void	init_fdf(t_fdf *fdf)
 	fdf->win_ptr = NULL;
 	fdf->coord = NULL;
 	fdf->angle = 0.5;
+	fdf->z = 1;
 }
 
 int	exit_fdf(t_fdf *fdf)
@@ -57,8 +58,6 @@ int	start_fdf(t_fdf *fdf, char *filename)
 	fdf->win_height = HEIGHT;
 	fdf->win_width = WIDTH;
 	calc_linesize(fdf);
-	printf("line_size: %i\n", fdf->line_size);
-	fdf->z = fdf->line_size;
 	fdf->mlx_ptr = mlx_init();
 	if (fdf->mlx_ptr == NULL)
 	{

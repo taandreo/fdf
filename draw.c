@@ -6,7 +6,7 @@
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/23 19:24:00 by tairribe          #+#    #+#             */
-/*   Updated: 2022/12/23 19:39:00 by tairribe         ###   ########.fr       */
+/*   Updated: 2022/12/27 02:02:04 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,12 +45,12 @@ void	new_line(t_fdf *fdf, t_point *src, t_point *dst)
 	zoom(fdf, src);
 	centralize_before(fdf, src);
 	rotate_z(src, Z_ANGLE);
-	rotate_x(src, X_ANGLE, fdf->z);
+	rotate_x(src, X_ANGLE, fdf->line_size * fdf->z);
 	centralize_after(fdf, src);
 	zoom(fdf, dst);
 	centralize_before(fdf, dst);
 	rotate_z(dst, Z_ANGLE);
-	rotate_x(dst, X_ANGLE, fdf->z);
+	rotate_x(dst, X_ANGLE, fdf->line_size * fdf->z);
 	centralize_after(fdf, dst);
 	bresenham(fdf, src, dst);
 }

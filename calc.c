@@ -6,7 +6,7 @@
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/23 18:50:54 by tairribe          #+#    #+#             */
-/*   Updated: 2022/12/23 19:20:00 by tairribe         ###   ########.fr       */
+/*   Updated: 2022/12/27 02:47:52 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void	rotate_z(t_point *po, float angle)
 	po->y = x * sin(angle) + y * cos(angle);
 }
 
-void	rotate_x(t_point *po, float angle, int zm)
+void	rotate_x(t_point *po, float angle, float zm)
 {
 	float	y;
 	float	z;
