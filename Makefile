@@ -1,6 +1,6 @@
 .PHONY: all clean fclean re log bonus libft
 
-CC = clang
+CC = cc
 INCLUDES = libmlx_mac
 NAME = fdf
 LIBFT = ./lib/libft.a
