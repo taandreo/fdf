@@ -6,7 +6,7 @@
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/23 19:45:29 by tairribe          #+#    #+#             */
-/*   Updated: 2022/12/27 03:56:58 by tairribe         ###   ########.fr       */
+/*   Updated: 2022/12/27 04:03:38 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@
 # include <mlx.h>
 # include <fcntl.h>
 # include <math.h>
-# include <X11/keysymdef.h> 
 
 # define WHITE 0xFFFFFF
 # define WIDTH 1200
