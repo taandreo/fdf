@@ -6,13 +6,13 @@
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/23 19:24:00 by tairribe          #+#    #+#             */
-/*   Updated: 2022/12/27 04:00:32 by tairribe         ###   ########.fr       */
+/*   Updated: 2022/12/27 20:31:28 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
-void	start_img(t_fdf *fdf)
+static void	start_img(t_fdf *fdf)
 {
 	if (fdf->img == NULL)
 		fdf->img = ft_calloc(1, sizeof(t_img));
@@ -29,7 +29,7 @@ void	start_img(t_fdf *fdf)
 			&fdf->img->size_line, &fdf->img->endian);
 }
 
-t_point	init_point(int x, int y, int z, int color)
+static t_point	init_point(int x, int y, int z, int color)
 {
 	t_point	po;
 
@@ -40,7 +40,7 @@ t_point	init_point(int x, int y, int z, int color)
 	return (po);
 }
 
-void	new_line(t_fdf *fdf, t_point *src, t_point *dst)
+static void	new_line(t_fdf *fdf, t_point *src, t_point *dst)
 {
 	zoom(fdf, src);
 	centralize_before(fdf, src);
@@ -61,7 +61,7 @@ void	new_line(t_fdf *fdf, t_point *src, t_point *dst)
 	bresenham(fdf, src, dst);
 }
 
-void	draw_line(t_fdf *fdf, int y)
+static void	draw_line(t_fdf *fdf, int y)
 {
 	int		x;
 	t_point	dst;

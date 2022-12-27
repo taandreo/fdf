@@ -6,13 +6,13 @@
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/23 18:23:36 by tairribe          #+#    #+#             */
-/*   Updated: 2022/12/23 18:27:50 by tairribe         ###   ########.fr       */
+/*   Updated: 2022/12/27 20:41:13 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
-char	**get_mt(char *s)
+static char	**get_mt(char *s)
 {
 	char	*l;
 	char	**mt;
@@ -24,7 +24,7 @@ char	**get_mt(char *s)
 	return (mt);
 }
 
-void	get_xy(t_fdf *fdf, char *filename)
+static void	get_xy(t_fdf *fdf, char *filename)
 {
 	char	*line;	
 	int		fd;
@@ -44,7 +44,7 @@ void	get_xy(t_fdf *fdf, char *filename)
 	close(fd);
 }
 
-t_crd	get_crd(char *s)
+static t_crd	get_crd(char *s)
 {
 	char	*color;
 	t_crd	c;
@@ -67,7 +67,7 @@ t_crd	get_crd(char *s)
 	return (c);
 }
 
-t_crd	*get_line(char *raw_line, int size)
+static t_crd	*get_line(char *raw_line, int size)
 {
 	char	**mt;
 	t_crd	*p;

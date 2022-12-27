@@ -6,7 +6,7 @@
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/23 19:45:29 by tairribe          #+#    #+#             */
-/*   Updated: 2022/12/27 04:13:28 by tairribe         ###   ########.fr       */
+/*   Updated: 2022/12/27 20:40:28 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ typedef struct s_fdf
 	t_img		*img;
 }				t_fdf;
 
-// FILE
+// PARSE
 void	get_coordinates(t_fdf *fdf, char *filename);
 // BRESENHAM
 void	bresenham(t_fdf *fdf, t_point *src, t_point *dst);

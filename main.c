@@ -6,13 +6,13 @@
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/07 19:45:41 by tairribe          #+#    #+#             */
-/*   Updated: 2022/12/27 03:57:39 by tairribe         ###   ########.fr       */
+/*   Updated: 2022/12/27 20:39:48 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
-void	init_fdf(t_fdf *fdf)
+static void	init_fdf(t_fdf *fdf)
 {
 	fdf->x = 0;
 	fdf->y = 0;
@@ -45,7 +45,7 @@ int	exit_fdf(t_fdf *fdf)
 	return (0);
 }
 
-void	calc_linesize(t_fdf *fdf)
+static void	calc_linesize(t_fdf *fdf)
 {
 	fdf->line_size = ft_min(fdf->win_width / fdf->x / 2,
 			fdf->win_height / fdf->y / 2);
@@ -53,7 +53,7 @@ void	calc_linesize(t_fdf *fdf)
 		fdf->line_size = LINESIZE_MIN;
 }
 
-int	start_fdf(t_fdf *fdf, char *filename)
+static int	start_fdf(t_fdf *fdf, char *filename)
 {
 	fdf->img = NULL;
 	fdf->win_height = HEIGHT;

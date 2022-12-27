@@ -6,13 +6,13 @@
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/23 19:20:22 by tairribe          #+#    #+#             */
-/*   Updated: 2022/12/27 04:01:13 by tairribe         ###   ########.fr       */
+/*   Updated: 2022/12/27 04:51:56 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
-void	zoom_control(t_fdf *fdf, int keycode)
+static void	zoom_control(t_fdf *fdf, int keycode)
 {
 	if (keycode == 'w')
 	{
@@ -28,7 +28,7 @@ void	zoom_control(t_fdf *fdf, int keycode)
 	}
 }
 
-void	z_control(t_fdf *fdf, int keycode)
+static void	z_control(t_fdf *fdf, int keycode)
 {
 	if (keycode == 'z')
 	{
@@ -42,7 +42,7 @@ void	z_control(t_fdf *fdf, int keycode)
 	}
 }
 
-void	up_vision(t_fdf *fdf)
+static void	up_vision(t_fdf *fdf)
 {
 	if (fdf->up)
 		fdf->up = 0;
@@ -63,6 +63,6 @@ int	key_press(int keycode, void *param)
 	if (ft_strrchr("zx", keycode))
 		z_control(fdf, keycode);
 	if (ft_strrchr("f", keycode))
-		up_vision(fdf);	
+		up_vision(fdf);
 	return (0);
 }
