@@ -6,7 +6,7 @@
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/23 19:20:22 by tairribe          #+#    #+#             */
-/*   Updated: 2022/12/27 04:51:56 by tairribe         ###   ########.fr       */
+/*   Updated: 2022/12/28 01:26:19 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,13 +51,21 @@ static void	up_vision(t_fdf *fdf)
 	draw(fdf);
 }
 
+int	exit_fdf_win(t_fdf *fdf)
+{
+	exit_fdf(fdf, NULL);
+	return (0);
+}
+
 int	key_press(int keycode, void *param)
 {
 	t_fdf	*fdf;
 
 	fdf = param;
+	if (keycode == WIN_CLOSE)
+		exit_fdf(fdf, NULL);
 	if (keycode == KEY_ESC)
-		exit_fdf((t_fdf *) param);
+		exit_fdf(fdf, NULL);
 	if (ft_strrchr("ws", keycode))
 		zoom_control(fdf, keycode);
 	if (ft_strrchr("zx", keycode))

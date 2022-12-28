@@ -6,7 +6,7 @@
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/23 18:23:36 by tairribe          #+#    #+#             */
-/*   Updated: 2022/12/27 20:41:13 by tairribe         ###   ########.fr       */
+/*   Updated: 2022/12/28 01:15:21 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ static t_crd	get_crd(char *s)
 	return (c);
 }
 
-static t_crd	*get_line(char *raw_line, int size)
+static t_crd	*get_line(char *raw_line, int size, t_fdf *fdf)
 {
 	char	**mt;
 	t_crd	*p;
@@ -77,10 +77,7 @@ static t_crd	*get_line(char *raw_line, int size)
 	p = ft_calloc(size, sizeof(t_crd));
 	mt = get_mt(raw_line);
 	if (get_mt_size((void **) mt) != size)
-	{
-		free_mt((void **) mt);
-		print_error("Found wrong line length.");
-	}
+		fdf->err = 1;
 	while (mt[i])
 	{
 		p[i] = get_crd(mt[i]);
@@ -104,7 +101,9 @@ void	get_coordinates(t_fdf *fdf, char *filename)
 	while (i < fdf->y)
 	{
 		raw_line = get_next_line(fd);
-		fdf->coord[i++] = get_line(raw_line, fdf->x);
+		fdf->coord[i++] = get_line(raw_line, fdf->x, fdf);
 	}
 	close(fd);
+	if (fdf->err)
+		exit_fdf(fdf, "find wrong line number.");
 }

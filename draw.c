@@ -6,7 +6,7 @@
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/23 19:24:00 by tairribe          #+#    #+#             */
-/*   Updated: 2022/12/27 20:31:28 by tairribe         ###   ########.fr       */
+/*   Updated: 2022/12/27 22:02:07 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,7 @@ static void	start_img(t_fdf *fdf)
 	fdf->img->ptr = mlx_new_image(
 			fdf->mlx_ptr, fdf->win_width, fdf->win_height);
 	if (fdf->img->ptr == NULL)
-	{
-		print_error("Starting new image.");
-		exit_fdf(fdf);
-	}
+		exit_fdf(fdf, "Starting new image.");
 	fdf->img->data = mlx_get_data_addr(fdf->img->ptr, &fdf->img->pixels,
 			&fdf->img->size_line, &fdf->img->endian);
 }

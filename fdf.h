@@ -6,7 +6,7 @@
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/23 19:45:29 by tairribe          #+#    #+#             */
-/*   Updated: 2022/12/27 20:40:28 by tairribe         ###   ########.fr       */
+/*   Updated: 2022/12/28 01:02:36 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,6 @@
 # include <stdio.h>
 # include <unistd.h>
 # include "libft.h"
-# include "ft_printf.h"
-# include <strings.h>
 # include <stdlib.h>
 # include <mlx.h>
 # include <fcntl.h>
@@ -90,6 +88,7 @@ typedef struct s_fdf
 	void		*win_ptr;
 	double		angle;
 	int			up;
+	int			err;
 	t_img		*img;
 }				t_fdf;
 
@@ -98,7 +97,7 @@ void	get_coordinates(t_fdf *fdf, char *filename);
 // BRESENHAM
 void	bresenham(t_fdf *fdf, t_point *src, t_point *dst);
 // MAIN
-int		exit_fdf(t_fdf *fdf);
+int		exit_fdf(t_fdf *fdf, char *err);
 // DRAW
 void	draw(t_fdf *fdf);
 // PIXEL
@@ -118,5 +117,6 @@ void	print_error(char *s);
 void	usage(void);
 int		ft_abs(int value);
 // HOOKS
+int		exit_fdf_win(t_fdf *fdf);
 int		key_press(int keycode, void *param);
 #endif
